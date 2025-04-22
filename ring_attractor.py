@@ -18,20 +18,21 @@ class RA():
         self.h_b = 0
         self.v_0 = 10
         self.h_i = None
-        self.beta = 1
+        self.beta = 400
         self.indx = None
         self.std_dev = 2*math.pi/self.N_s
-        self.alpha = np.mod(np.arange(self.N_s) * self.std_dev, 2 * np.pi)
+        #self.alpha = np.mod(np.arange(self.N_s) * self.std_dev, 2 * np.pi)
+        self.alpha = np.mod(np.pi/2 + np.arange(self.N_s) * self.std_dev, 2 * np.pi)
         self.sigma = np.random.choice([1,-1], size=self.N_s)  
         self.H = np.zeros([2,1])
 
 ring = RA()
-t_0 = 50
+t_0 = 500
 activity_log = np.zeros((t_0, ring.N_s))
 
 
 for k in range (t_0):
-    for t in range (ring.N_s):
+    for t in range (50*ring.N_s):
         ring.H = np.zeros([2,1])
         ring.indx = np.random.randint(0,ring.N_s,size=1)
         utils.external_stimuli(ring, theta_target)
