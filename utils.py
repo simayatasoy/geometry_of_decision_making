@@ -9,8 +9,10 @@ def external_stimuli(ra, theta_target):
         angle_diff = (ra.alpha[ra.indx] - theta_target)
         true_diff = (angle_diff + np.pi) % (2*np.pi) - np.pi
     else:
-        egocentric_target = (theta_target-ra.heading+np.pi) % (2*np.pi) - np.pi
-        true_diff = (ra.alpha[ra.indx] - egocentric_target + np.pi) % (2*np.pi) - np.pi
+        #egocentric_target = (theta_target-ra.heading+np.pi) % (2*np.pi) - np.pi
+        #mapped_alpha = (ra.alpha[ra.indx]+ra.heading+np.pi) % (2*np.pi) - np.pi
+        true_diff = (ra.alpha[ra.indx] - theta_target + np.pi) % (2*np.pi) - np.pi
+        #true_diff = (ra.alpha[ra.indx] - theta_target) % (2*np.pi)
     h_i = ra.h_0/math.sqrt(2*math.pi*ra.std_dev**2)*math.exp(-(true_diff)**2/(2*ra.std_dev**2))
     ra.h_i = h_i
 
@@ -46,18 +48,21 @@ def plot_neuron_activity(activity_log):
     plt.tight_layout()
     plt.show()
 
-def plot_trajectory(trajectory,target_x,target_y):
+def plot_trajectory(trajectory,target_x,target_y,ra):
     plt.figure(figsize=(6, 6))
     plt.plot(trajectory[:, 0], trajectory[:, 1], color='blue')
     plt.scatter([target_x], [target_y], color='orange', label='Target')
     plt.scatter(trajectory[0, 0], trajectory[0, 1], color='green', label='Start')
     plt.scatter(trajectory[-1, 0], trajectory[-1, 1], color='red', label='End')
     plt.axis('equal')
-    plt.xlim(-100, 100)
-    plt.ylim(-100, 100)
+    plt.xlim(-400, 400)
+    plt.ylim(-400, 400)
     plt.gca().set_aspect('equal', adjustable='box')
 
-    plt.title("Agent Trajectory (Allocentric)")
+    if ra.allocentric:
+        plt.title("Agent Trajectory (Allocentric)")
+    else:
+        plt.title("Agent Trajectory (Egocentric)")
     plt.xlabel("X")
     plt.ylabel("Y")
     plt.legend()
